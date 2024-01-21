@@ -12,11 +12,15 @@ from rest_framework.views import APIView
 
 class OgrenciApiView(APIView):
     def get(self,request):
+        # VERIYI CEK, SERIALIZE ET VE DÖNDÜR
+
         ogrenciler = Ogrenci.objects.filter(still_student=True)
         seriliazer= OgrenciSerializer(ogrenciler,many=True)
         return Response(seriliazer.data)
     
     def post(self,request):
+        # GIRILEN VERIYI SERIALIZE ET, GECERLIYSE KAYDET VE MESAJ DONDUR
+
         serializer = OgrenciSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -35,6 +39,7 @@ class OgrenciDetailView(APIView):
         return Response(serializer.data)
 
     def put(self,request,pk):
+        # POST'UN AYNISI sadece gonderecegimiz veriyi (request.data) kullanarak serializer olustururuz 
         ogrenci = self.get_object(pk=pk)
         serializer = OgrenciSerializer(ogrenci,data=request.data)
         if serializer.is_valid():

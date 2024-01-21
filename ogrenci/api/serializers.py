@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 
 class OgrenciSerializer(serializers.Serializer):
+    # öğrenci modeli için Django modelini JSON formatına dönüştürmek (serialize etmek) ve tersine dönüştürmek (deserialize etmek) için
     id=serializers.IntegerField(read_only=True)
     name=serializers.CharField()
     surname=serializers.CharField()
@@ -13,6 +14,7 @@ class OgrenciSerializer(serializers.Serializer):
     still_student=serializers.BooleanField()
     
     def create(self,validated_data):
+        # gelen doğrulanmış veri setini kullanarak bir öğrenci nesnesi oluştur
         print(validated_data)
         return Ogrenci.objects.create(**validated_data)
     
