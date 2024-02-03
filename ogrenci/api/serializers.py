@@ -11,10 +11,11 @@ class OgrenciSerializer(serializers.Serializer):
     mail=serializers.CharField()
     register_date=serializers.DateTimeField(read_only=True)
     average=serializers.IntegerField()
+    status=serializers.CharField(read_only=True)
     still_student=serializers.BooleanField()
     
+
     def create(self,validated_data):
-        # gelen doğrulanmış veri setini kullanarak bir öğrenci nesnesi oluştur
         print(validated_data)
         return Ogrenci.objects.create(**validated_data)
     
@@ -25,6 +26,17 @@ class OgrenciSerializer(serializers.Serializer):
         instance.mail=validated_data.get('mail', instance.mail)
         instance.register_date=validated_data.get('register_date', instance.register_date)
         instance.average=validated_data.get('average', instance.average)
+        instance.status=validated_data.get("status",instance.status)
         instance.still_student=validated_data.get('still_student', instance.still_student)
         instance.save()
         return instance
+    
+    def validate(self,data):
+        if data['name']==data['surname']:
+            raise serializers.ValidationError('name and surname cannot be same!')
+        return data
+    
+    def validate_name(self,value):
+        if len(value)<=2:
+            raise serializers.ValidationError(f"isim karakter sayisi {len(value)}'den fazla olmalidir.")
+        return value
